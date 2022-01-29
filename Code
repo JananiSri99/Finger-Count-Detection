@@ -1,0 +1,29 @@
+import numpy as np
+import sys
+
+from util.data_handling import breakIntoGrids, reshapeIntoImage
+
+def count_fingers(im):
+   
+   im = im > 56 
+   X = breakIntoGrids(im, s = 9) 
+
+   
+   treeRule1 = lambda X: np.logical_and(np.logical_and(X[:, 40] == 1, X[:,0] == 0), X[:, 53] == 0)
+   yhat = treeRule1(X)
+
+    
+   yhat_reshaped = reshapeIntoImage(yhat, im.shape)
+   
+   indices = np.where(yhat_reshaped)
+   var=np.histogram(indices[1],bins=100)
+   
+   sum_plot_y=sum(var[0])
+
+   
+   if sum_plot_y<87:
+      return(1)
+   elif sum_plot_y>86 and sum_plot_y<156:
+      return(2)
+   elif sum_plot_y>155:
+      return(3)
